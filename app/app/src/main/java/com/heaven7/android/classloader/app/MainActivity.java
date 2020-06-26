@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickTestEcCompile(View v){
-        File file = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+       // File file = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        File file = Environment.getExternalStorageDirectory();
         EclipseCompileTest test = new EclipseCompileTest(this, file);
         test.test();
     }
