@@ -11,6 +11,8 @@ import com.heaven7.android.classloader.app.eclipse.EclipseCompileTest;
 import com.heaven7.core.util.PermissionHelper;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -46,9 +48,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickTestEcCompile(View v){
        // File file = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-        File file = Environment.getExternalStorageDirectory();
+        File file = Environment.getExternalStorageDirectory(); //not work when compile 29+
         EclipseCompileTest test = new EclipseCompileTest(this, file);
         test.test();
     }
 
+    public void onClickTestCodeGen(View view) {
+        String template  = "package com.xx.xx; public class $CLASSNAME{ private String attr1; private String attr2;" +
+                "public $RETURN jump($IN){ return $IN.toString(); }" +
+                "}";
+        Map<String, String> map = new HashMap<>();
+        map.put("CLASSNAME", "Test");
+        map.put("RETURN", "String");
+        map.put("IN", "TestUtils");
+
+        String extra = "public void test1(){return;}";
+        String imports = "import test.TestUtils;\n";
+        DynamicCodeGenerator codeGenerator = new DynamicCodeGenerator(template, map, extra, imports);
+        System.out.println(codeGenerator.generate());
+    }
 }

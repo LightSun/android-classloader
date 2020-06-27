@@ -8,6 +8,7 @@ import com.heaven7.java.base.util.IOUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -31,25 +32,29 @@ public class EclipseCompileTest {
 
         //1
         File storage = dir;
-        BufferedInputStream bis = null;
-        OutputStream dexWriter = null;
-        int BUF_SIZE = 8 * 1024;
-        try {
-            bis = new BufferedInputStream(context.getAssets().open("a27/android.jar"));
-            dexWriter = new BufferedOutputStream(
-                    new FileOutputStream(storage.getAbsolutePath() + "/android.jar"));
-            byte[] buf = new byte[BUF_SIZE];
-            int len;
-            while((len = bis.read(buf, 0, BUF_SIZE)) > 0) {
-                dexWriter.write(buf, 0, len);
+
+        File dst = new File(storage, "/android.jar");
+        if(!dst.exists()){
+            BufferedInputStream bis = null;
+            OutputStream dexWriter = null;
+            int BUF_SIZE = 8 * 1024;
+            try {
+                bis = new BufferedInputStream(context.getAssets().open("a27/android.jar"));
+                dexWriter = new BufferedOutputStream(
+                        new FileOutputStream(dst.getAbsolutePath()));
+                byte[] buf = new byte[BUF_SIZE];
+                int len;
+                while((len = bis.read(buf, 0, BUF_SIZE)) > 0) {
+                    dexWriter.write(buf, 0, len);
+                }
+                dexWriter.flush();
+            } catch (Exception e) {
+                System.err.println("Error while copying from assets: " + e.getMessage());
+                e.printStackTrace();
+            }finally {
+                IOUtils.closeQuietly(bis);
+                IOUtils.closeQuietly(dexWriter);
             }
-            dexWriter.flush();
-        } catch (Exception e) {
-            System.err.println("Error while copying from assets: " + e.getMessage());
-            e.printStackTrace();
-        }finally {
-            IOUtils.closeQuietly(bis);
-            IOUtils.closeQuietly(dexWriter);
         }
         //2.
         String src = "package com.heaven7.android.classloader.app.eclipse; \n" +
@@ -60,13 +65,23 @@ public class EclipseCompileTest {
                 "}";
         FileUtils.writeTo(new File( storage.getAbsolutePath() + "/Test.java"), src);
 
-        //3
+        src = "package com.heaven7.android.classloader.app.eclipse; \n" +
+                "public class Test1{" +
+                "public String toString() {\n" +
+                "    return \"Hallo Welt!\";\n" +
+                "}" +
+                "}";
+        FileUtils.writeTo(new File( storage.getAbsolutePath() + "/Test1.java"), src);
+
+        //3 .can compile multi class at same time.
         System.err.println("instantiating the compiler and compiling the java file");
         org.eclipse.jdt.internal.compiler.batch.Main ecjMain = new org.eclipse.jdt.internal.compiler.batch.Main(
                 new PrintWriter(System.out), new PrintWriter(System.err), false/*noSystemExit*/, null);
         boolean result = ecjMain.compile(new String[]{"-classpath",
                 storage.getAbsolutePath() + "/android.jar",
-                storage.getAbsolutePath() + "/Test.java"});
+                storage.getAbsolutePath() + "/Test.java",
+                storage.getAbsolutePath() + "/Test1.java",
+        });
         System.out.println(result);
     }
 }
