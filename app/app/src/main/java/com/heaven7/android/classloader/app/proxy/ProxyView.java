@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 
 import com.heaven7.android.classloader.app.R;
 
+import java.lang.reflect.Constructor;
+
 public class ProxyView extends View {
 
     private AbsView mView;
@@ -125,7 +127,9 @@ public class ProxyView extends View {
             String cn = in.readString();
             if(cn != null){
                 try {
-                    params = (Parcelable) Class.forName(cn).getConstructor(Parcel.class).newInstance(in);
+                    Constructor<?> cons = Class.forName(cn).getConstructor(Parcel.class);
+                    cons.setAccessible(true);
+                    params = (Parcelable) cons.newInstance(in);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
