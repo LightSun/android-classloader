@@ -3,6 +3,7 @@ package com.heaven7.android.classloader.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -66,5 +67,9 @@ public class MainActivity extends AppCompatActivity {
         String imports = "import test.TestUtils;\n";
         DynamicCodeGenerator codeGenerator = new DynamicCodeGenerator(template, map, extra, imports);
         System.out.println(codeGenerator.generate());
+    }
+
+    public void onClickTestProxyView(View view) {
+        startActivity(new Intent(this, TestProxyViewAc.class));
     }
 }

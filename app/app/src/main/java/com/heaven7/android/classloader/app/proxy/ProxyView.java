@@ -63,6 +63,10 @@ public class ProxyView extends View {
         return mView;
     }
 
+    public void applyWidthHeight(int measureWidth, int measureHeight){
+        super.setMeasuredDimension(measureWidth, measureHeight);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mView.onMeasure(widthMeasureSpec, heightMeasureSpec);

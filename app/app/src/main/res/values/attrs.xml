@@ -4,4 +4,8 @@
         <attr name="proxy_style" format="reference"/>
         <attr name="proxy_delegate" format="string|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="TestView">
+        <attr name="test_view_color" format="color|reference"/>
+    </declare-styleable>
 </resources>

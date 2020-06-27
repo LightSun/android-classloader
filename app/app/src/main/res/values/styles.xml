@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="common_testView">
+        <item name="test_view_color">@color/colorAccent</item>
+    </style>
+
 </resources>
