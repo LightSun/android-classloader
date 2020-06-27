@@ -2,6 +2,7 @@ package com.heaven7.android.classloader.app.proxy;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.os.Parcel;
@@ -9,8 +10,6 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import androidx.annotation.Nullable;
 
 import com.heaven7.android.classloader.app.R;
 
@@ -20,19 +19,19 @@ public class ProxyView extends View {
 
     private AbsView mView;
 
-    public ProxyView(Context context, @Nullable AttributeSet attrs) {
+    public ProxyView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    public ProxyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ProxyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
     @TargetApi(21)
-    public ProxyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProxyView(Context context,  AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
-    private void init(Context context, AttributeSet attrs){
+    protected void init(Context context, AttributeSet attrs){
         if(attrs == null){
             throw new IllegalStateException();
         }
@@ -82,6 +81,11 @@ public class ProxyView extends View {
     }
 
     @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        mView.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         return new SavedState(superState, mView.getParams());
@@ -107,7 +111,7 @@ public class ProxyView extends View {
     }
     @Override
     protected void onDetachedFromWindow() {
-        mView.onDetachedFromWindow();
+        mView.onDestroy();
         super.onDetachedFromWindow();
     }
     public static class SavedState extends BaseSavedState{

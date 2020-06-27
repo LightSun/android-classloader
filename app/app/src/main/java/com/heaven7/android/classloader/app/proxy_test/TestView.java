@@ -1,5 +1,6 @@
 package com.heaven7.android.classloader.app.proxy_test;
 
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.ViewGroup;
 
 import com.heaven7.android.classloader.app.R;
 import com.heaven7.android.classloader.app.proxy.AbsView;
@@ -32,7 +34,7 @@ public class TestView extends AbsView<TestView.Params> {
     }
 
     @Override
-    protected Params initialize0(TypedArray ta) {
+    protected Params onCreate(TypedArray ta) {
         Params p = new Params();
         p.color = ta.getColor(R.styleable.TestView_test_view_color, Color.BLACK);
        // mPaint.setStyle(Paint.Style.FILL);
@@ -49,7 +51,18 @@ public class TestView extends AbsView<TestView.Params> {
         mPaint.setColor(getParams().color);
         canvas.drawRect(mRect, mPaint);
     }
-
+    public void onConfigurationChanged(Configuration newConfig) {
+        ProxyView proxyView = getProxyView();
+        ViewGroup.LayoutParams lp = proxyView.getLayoutParams();
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            lp.width = 1000;
+            lp.height = 1000;
+        }else {
+            lp.width = 500;
+            lp.height = 500;
+        }
+        proxyView.setLayoutParams(lp);
+    }
     public static class Params implements Parcelable {
         int color;
 
