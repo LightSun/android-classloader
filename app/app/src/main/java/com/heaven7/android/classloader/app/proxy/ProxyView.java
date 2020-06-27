@@ -106,7 +106,6 @@ public class ProxyView extends View {
     }
     public static class SavedState extends BaseSavedState{
         final Parcelable params;
-
         public SavedState(Parcelable superState, Parcelable params) {
             super(superState);
             this.params = params;
@@ -114,23 +113,31 @@ public class ProxyView extends View {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeString(params.getClass().getName());
-            params.writeToParcel(out, flags);
+            if(params == null){
+                out.writeString(null);
+            }else {
+                out.writeString(params.getClass().getName());
+                params.writeToParcel(out, flags);
+            }
         }
         protected SavedState(Parcel in) {
             super(in);
             String cn = in.readString();
-            try {
-                params = (Parcelable) Class.forName(cn).getConstructor(Parcel.class).newInstance(in);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if(cn != null){
+                try {
+                    params = (Parcelable) Class.forName(cn).getConstructor(Parcel.class).newInstance(in);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }else {
+                params = null;
             }
         }
         @Override
         public String toString() {
             String str = "ProxyView.SavedState{"
                     + Integer.toHexString(System.identityHashCode(this))
-                    + params.toString();
+                    + (params!= null ? params.toString() : "");
             return str + "}";
         }
 
