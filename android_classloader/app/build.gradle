@@ -54,4 +54,6 @@ dependencies {
         exclude group: 'com.android.support'
         exclude group: 'com.heaven7.android.component'
     }
+
+    implementation project(":lib_classloader")
 }

@@ -3,6 +3,8 @@ package com.heaven7.android.classloader.app.eclipse;
 import android.content.Context;
 import android.os.Environment;
 
+import com.heaven7.android.classloader.ClassLoaderManager;
+import com.heaven7.android.classloader.GeneratedClassLoader;
 import com.heaven7.java.base.util.FileUtils;
 import com.heaven7.java.base.util.IOUtils;
 
@@ -10,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -29,6 +32,7 @@ public class EclipseCompileTest {
         //1.copy android.jar
         //2. generate .java
         //3. compile
+        //4, load
 
         //1
         File storage = dir;
@@ -60,7 +64,7 @@ public class EclipseCompileTest {
         String src = "package com.heaven7.android.classloader.app.eclipse; \n" +
                 "public class Test{" +
                      "public String toString() {\n" +
-                    "    return \"Hallo Welt!\";\n" +
+                    "    return \"Hallo Heaven7!\";\n" +
                     "}" +
                 "}";
         FileUtils.writeTo(new File( storage.getAbsolutePath() + "/Test.java"), src);
@@ -68,7 +72,7 @@ public class EclipseCompileTest {
         src = "package com.heaven7.android.classloader.app.eclipse; \n" +
                 "public class Test1{" +
                 "public String toString() {\n" +
-                "    return \"Hallo Welt!\";\n" +
+                "    return \"Hallo Google!\";\n" +
                 "}" +
                 "}";
         FileUtils.writeTo(new File( storage.getAbsolutePath() + "/Test1.java"), src);
@@ -83,5 +87,20 @@ public class EclipseCompileTest {
                 storage.getAbsolutePath() + "/Test1.java",
         });
         System.out.println(result);
+        //4, load class
+        String file = storage.getAbsolutePath() + "/Test.class";
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            byte[] bytes = IOUtils.readBytes(fis);
+            GeneratedClassLoader loader = new ClassLoaderManager(storage).createClassLoader(getClass().getClassLoader());
+            Class<?> clazz = loader.defineClass("com.heaven7.android.classloader.app.eclipse.Test", bytes);
+            System.out.println(clazz.newInstance().toString());
+            loader.reset();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            IOUtils.closeQuietly(fis);
+        }
     }
 }
