@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="CustomLayout_layout">
+        <attr name="android:layout_gravity" />
+        <attr name="layout_position" format="enum">
+            <enum name="middle" value="0" />
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+    </declare-styleable>
+
     <declare-styleable name="ProxyView">
         <attr name="lib_proxy_view_style" format="reference"/>
         <attr name="lib_proxy_view_delegate" format="string|reference"/>
@@ -9,5 +18,6 @@
     <declare-styleable name="TestView">
         <attr name="test_view_color" format="color|reference"/>
     </declare-styleable>
+
 
 </resources>

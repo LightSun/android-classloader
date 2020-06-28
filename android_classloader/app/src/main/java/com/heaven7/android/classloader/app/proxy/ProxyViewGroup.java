@@ -100,12 +100,26 @@ public class ProxyViewGroup extends ViewGroup implements ProxyViewDelegate {
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mView.onTouchEvent(event);
+        if(mView.onTouchEvent(event)){
+            return true;
+        }
+        return super.onTouchEvent(event);
     }
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return mView.onInterceptTouchEvent(ev);
+        if(mView.onInterceptTouchEvent(ev)){
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(mView.dispatchTouchEvent(ev)){
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

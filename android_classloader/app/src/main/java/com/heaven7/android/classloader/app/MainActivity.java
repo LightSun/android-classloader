@@ -72,4 +72,8 @@ public class MainActivity extends AppCompatActivity {
     public void onClickTestProxyView(View view) {
         startActivity(new Intent(this, TestProxyViewAc.class));
     }
+
+    public void onClickTestCustomLayout(View view) {
+        startActivity(new Intent(this, TestCustomLayoutAc.class));
+    }
 }

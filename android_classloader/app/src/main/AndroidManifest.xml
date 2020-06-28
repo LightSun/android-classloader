@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestProxyViewAc"/>
+        <activity android:name=".TestCustomLayoutAc"/>
     </application>
 
 </manifest>

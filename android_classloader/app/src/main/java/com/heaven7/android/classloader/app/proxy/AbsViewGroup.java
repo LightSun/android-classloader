@@ -19,4 +19,7 @@ public abstract class AbsViewGroup<P extends Parcelable> extends AbsView<P> {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return false;
     }
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
 }
