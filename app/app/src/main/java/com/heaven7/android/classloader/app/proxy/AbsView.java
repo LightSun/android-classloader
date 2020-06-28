@@ -9,18 +9,19 @@ import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.View;
 
-import static java.lang.Math.max;
-
 public abstract class AbsView<P extends Parcelable> {
 
-    private final ProxyView proxyView;
+    private final View proxyView;
     private P params;
 
-    public AbsView(ProxyView proxyView) {
+    public AbsView(View proxyView) {
+        if(!(proxyView instanceof ProxyView) && !(proxyView instanceof ProxyViewGroup)){
+            throw new IllegalStateException("proxy view must be ProxyView or ProxyViewGroup.");
+        }
         this.proxyView = proxyView;
     }
 
-    public ProxyView getProxyView() {
+    public View getProxyView() {
         return proxyView;
     }
 
@@ -72,23 +73,20 @@ public abstract class AbsView<P extends Parcelable> {
     public void onDraw(Canvas canvas) {
 
     }
+    public void onPreDispatchDraw(Canvas canvas) {
+
+    }
+    public void onPostDispatchDraw(Canvas canvas) {
+
+    }
     public boolean onTouchEvent(MotionEvent event) {
         return false;
     }
 
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        ProxyView pv = getProxyView();
-        final int minW;
-        final int minH;
-        if(pv.getBackground() == null){
-            minW = pv.getMinimumWidth();
-            minH = pv.getMinimumHeight();
-        }else {
-            minW = max(pv.getMinimumWidth(), pv.getBackground().getMinimumWidth());
-            minH = max(pv.getMinimumHeight(), pv.getBackground().getMinimumHeight());
-        }
-        int w = View.getDefaultSize(minW, widthMeasureSpec);
-        int h = View.getDefaultSize(minH, heightMeasureSpec);
+        ProxyViewDelegate pv = (ProxyViewDelegate) getProxyView();
+        int w = View.getDefaultSize(pv.getSuggestedMinimumWidth(), widthMeasureSpec);
+        int h = View.getDefaultSize(pv.getSuggestedMinimumHeight(), heightMeasureSpec);
         pv.applyWidthHeight(w, h);
     }
     public void onLayout(boolean changed, int left, int top, int right, int bottom) {

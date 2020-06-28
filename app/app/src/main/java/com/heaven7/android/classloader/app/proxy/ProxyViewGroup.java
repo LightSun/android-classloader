@@ -9,22 +9,23 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.heaven7.android.classloader.app.R;
 
-public class ProxyView extends View implements ProxyViewDelegate {
+public class ProxyViewGroup extends ViewGroup implements ProxyViewDelegate {
 
-    private AbsView mView;
+    private AbsViewGroup mView;
 
-    public ProxyView(Context context, AttributeSet attrs) {
+    public ProxyViewGroup(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    public ProxyView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProxyViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
     @TargetApi(21)
-    public ProxyView(Context context,  AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProxyViewGroup(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
@@ -35,7 +36,7 @@ public class ProxyView extends View implements ProxyViewDelegate {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProxyView);
         try {
             String cn = a.getString(R.styleable.ProxyView_lib_proxy_view_delegate);
-            mView = (AbsView) Class.forName(cn).getConstructor(View.class).newInstance(this);
+            mView = (AbsViewGroup) Class.forName(cn).getConstructor(View.class).newInstance(this);
             if(mView.getStyleId() != null){
                 final int ap = a.getResourceId(R.styleable.ProxyView_lib_proxy_view_style, 0);
                 if (ap != 0) {
@@ -102,6 +103,10 @@ public class ProxyView extends View implements ProxyViewDelegate {
         return mView.onTouchEvent(event);
     }
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return mView.onInterceptTouchEvent(ev);
+    }
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mView.onDraw(canvas);
@@ -112,6 +117,7 @@ public class ProxyView extends View implements ProxyViewDelegate {
         super.dispatchDraw(canvas);
         mView.onPostDispatchDraw(canvas);
     }
+
     @Override
     protected void onDetachedFromWindow() {
         mView.onDestroy();

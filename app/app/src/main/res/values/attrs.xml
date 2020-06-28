@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="ProxyView">
-        <attr name="proxy_style" format="reference"/>
-        <attr name="proxy_delegate" format="string|reference"/>
+        <attr name="lib_proxy_view_style" format="reference"/>
+        <attr name="lib_proxy_view_delegate" format="string|reference"/>
     </declare-styleable>
 
     <declare-styleable name="TestView">
         <attr name="test_view_color" format="color|reference"/>
     </declare-styleable>
+
 </resources>

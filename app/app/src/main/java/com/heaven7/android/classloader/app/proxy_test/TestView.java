@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.heaven7.android.classloader.app.R;
@@ -43,7 +44,7 @@ public class TestView extends AbsView<TestView.Params> {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        ProxyView view = getProxyView();
+        View view = getProxyView();
         int w = view.getWidth();
         int h = view.getHeight();
         mRect.set(0, 0, w, h);
@@ -52,7 +53,7 @@ public class TestView extends AbsView<TestView.Params> {
         canvas.drawRect(mRect, mPaint);
     }
     public void onConfigurationChanged(Configuration newConfig) {
-        ProxyView proxyView = getProxyView();
+        View proxyView = getProxyView();
         ViewGroup.LayoutParams lp = proxyView.getLayoutParams();
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
             lp.width = 1000;
