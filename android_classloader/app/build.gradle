@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        applicationId "com.heaven7.android.classloader.app"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        pickFirst  'plugin.xml'
+        pickFirst  'about_files/LICENSE-2.0.txt'
+        pickFirst  'plugin.properties'
+        pickFirst  'META-INF/eclipse.inf'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    //implementation 'org.javassist:javassist:3.27.0-GA' //not support at android runtime
+    implementation 'org.eclipse.jdt:org.eclipse.jdt.core:3.15.0' //3.22.0
+    implementation 'com.heaven7.java.base:Java-base:1.2.0'
+    implementation('com.github.LightSun:util-v1:1.1.6') {
+        exclude group: 'com.android.support'
+        exclude group: 'com.heaven7.android.component'
+    }
+}
