@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickTestEcCompile(View v){
        // File file = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-        final File file = Environment.getExternalStorageDirectory(); //not work when compile 29+
+        final File file = Environment.getExternalStorageDirectory(); //not work when compile 29+.
+        // should add ' android:requestLegacyExternalStorage="true" ' in application node
+
         EclipseCompileTest test = new EclipseCompileTest(this, file);
         test.test();
     }
